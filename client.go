@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"github.com/onionltd/go-omg/http/request"
 	"github.com/onionltd/go-omg/spec"
-	"io"
+	"io/ioutil"
 	"net/http"
 	"strings"
 )
@@ -12,8 +12,6 @@ import (
 type Client struct {
 	cli *http.Client
 }
-
-const MaxMessageLength = 1 * 1024 * 1024 // MB
 
 func (c Client) do(req *http.Request) ([]byte, error) {
 	c.setUserAgent(req)
@@ -28,15 +26,7 @@ func (c Client) do(req *http.Request) ([]byte, error) {
 	if contentType := res.Header.Get("Content-Type"); !strings.HasPrefix(contentType, "text/plain") {
 		return nil, fmt.Errorf("invalid Content-Type '%s'", contentType)
 	}
-	b := make([]byte, MaxMessageLength)
-	recv, err := res.Body.Read(b)
-	if err != nil {
-		if err != io.EOF {
-			return nil, err
-		}
-	}
-	b = b[:recv]
-	return b, nil
+	return ioutil.ReadAll(res.Body)
 }
 
 func (c Client) setUserAgent(req *http.Request) {
