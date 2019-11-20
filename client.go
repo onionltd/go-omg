@@ -14,7 +14,6 @@ type Client struct {
 }
 
 func (c Client) do(req *http.Request) ([]byte, error) {
-	c.setUserAgent(req)
 	res, err := c.cli.Do(req)
 	if err != nil {
 		return nil, err
@@ -27,10 +26,6 @@ func (c Client) do(req *http.Request) ([]byte, error) {
 		return nil, fmt.Errorf("invalid Content-Type '%s'", contentType)
 	}
 	return ioutil.ReadAll(res.Body)
-}
-
-func (c Client) setUserAgent(req *http.Request) {
-	req.Header.Set("User-Agent", "go-omg-client/1.0")
 }
 
 // GetMirrorsMessage makes an HTTP request to a host and downloads contents of mirrors.txt.
