@@ -6,7 +6,6 @@ import (
 	"github.com/onionltd/go-omg/spec"
 	"io/ioutil"
 	"net/http"
-	"strings"
 )
 
 type Client struct {
@@ -21,9 +20,6 @@ func (c Client) do(req *http.Request) ([]byte, error) {
 	defer res.Body.Close()
 	if res.StatusCode != http.StatusOK {
 		return nil, fmt.Errorf("invalid HTTP Response code '%d'", res.StatusCode)
-	}
-	if contentType := res.Header.Get("Content-Type"); !strings.HasPrefix(contentType, "text/plain") {
-		return nil, fmt.Errorf("invalid Content-Type '%s'", contentType)
 	}
 	return ioutil.ReadAll(res.Body)
 }
