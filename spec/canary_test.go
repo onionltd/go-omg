@@ -56,6 +56,26 @@ func TestCanary_ValidateExpired(t *testing.T) {
 	}
 }
 
+func TestCanary_IsValidDate(t *testing.T) {
+	date, err := time.Parse(time.RFC3339, "2019-11-11T00:00:00Z")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if err := canaryMessage.Validate(date); err != nil {
+		t.Fatal(err)
+	}
+}
+
+func TestCanary_IsValidDateExpired(t *testing.T) {
+	date, err := time.Parse(time.RFC3339, "2019-11-13T00:00:00Z")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if err := canaryMessage.Validate(date); err != ErrExpired {
+		t.Fatal(err)
+	}
+}
+
 func TestCanary_VerifySignature(t *testing.T) {
 	key, err := ioutil.ReadFile("testdata/pgp.txt")
 	if err != nil {

@@ -16,6 +16,7 @@ var ErrExpired = errors.New("canary has expired")
 
 // Validate validates canary message. It looks for existence of mandatory phrases within the signed
 // message, a Bitcoin block and a date. It parses the date and checks if the message is valid for given time period.
+// Returns nil if canary is valid.
 func (m Canary) Validate(t time.Time) error {
 	block, _ := clearsign.Decode(m)
 	if block == nil {
@@ -27,7 +28,17 @@ func (m Canary) Validate(t time.Time) error {
 	if err := findBitcoinBlockHash(block.Plaintext); err != nil {
 		return err
 	}
-	date, err := getDate(block.Plaintext)
+	return m.IsValidDate(t)
+}
+
+// IsValidDate validates canary's issue date. Unlike Validate method, IsValidDate checks only existence of date and its
+// validity against provided time. Phrases defined in OMG specification are not checked. Returns nil if canary is valid.
+func (m Canary) IsValidDate(t time.Time) error {
+	block, _ := clearsign.Decode(m)
+	if block == nil {
+		return errors.New("not a clearsigned message")
+	}
+	date, err := findDate(block.Plaintext)
 	if err != nil {
 		return err
 	}
@@ -37,7 +48,7 @@ func (m Canary) Validate(t time.Time) error {
 	return nil
 }
 
-func getDate(b []byte) (time.Time, error) {
+func findDate(b []byte) (time.Time, error) {
 	phrase := "Today is ([0-9]{4}-[0-9]{2}-[0-9]{2})"
 	rx, err := regexp.Compile(phrase)
 	if err != nil {
@@ -59,18 +70,6 @@ func findBitcoinBlockHash(b []byte) error {
 	}
 	if !matched {
 		return errors.New("bitcoin block hash is missing")
-	}
-	return nil
-}
-
-func findDate(b []byte) error {
-	phrase := "Today is [0-9]{4}-[0-9]{2}-[0-9]{2}"
-	matched, err := regexp.Match(phrase, b)
-	if err != nil {
-		return err
-	}
-	if !matched {
-		return errors.New("date is missing")
 	}
 	return nil
 }
