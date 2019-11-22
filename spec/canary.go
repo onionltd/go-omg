@@ -69,7 +69,7 @@ func findBitcoinBlockHash(b []byte) error {
 		return err
 	}
 	if !matched {
-		return errors.New("bitcoin block hash is missing")
+		return errors.New("hash of bitcoin block is missing")
 	}
 	return nil
 }
