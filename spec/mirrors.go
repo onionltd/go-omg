@@ -22,11 +22,14 @@ func (m Mirrors) List() ([]string, error) {
 	reader := bufio.NewReader(bytes.NewReader(block.Bytes))
 	for {
 		line, err := reader.ReadString('\n')
+		line = strings.TrimSpace(line)
 		// Handle error after string matching the line.
 		// If a file doesn't end with a newline, we would never process the last line.
 		if strings.HasPrefix(line, "http://") ||
-			strings.HasPrefix(line, "https://") {
-			mirrors = append(mirrors, strings.TrimSpace(line))
+			strings.HasPrefix(line, "https://") ||
+			strings.HasSuffix(line, ".onion") ||
+			strings.HasSuffix(line, ".onion/") {
+			mirrors = append(mirrors, line)
 		}
 		if err != nil {
 			if err == io.EOF {
