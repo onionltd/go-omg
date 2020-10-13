@@ -47,6 +47,11 @@ func TestMirrors_List(t *testing.T) {
 	}
 
 	expectedMirrors := []string{"http://darkfailllnkf4vf.onion", "https://dark.fail"}
+
+	if len(mirrors) != len(expectedMirrors) {
+		t.Fatalf("unexpected number of mirrors: %v", mirrors)
+	}
+
 	for i := range mirrors {
 		if mirrors[i] != expectedMirrors[i] {
 			t.Fatalf("invalid mirrors: %v", mirrors)
