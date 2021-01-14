@@ -3,7 +3,6 @@ package goomg
 import (
 	"context"
 	"fmt"
-	"github.com/onionltd/go-omg/http/request"
 	"github.com/onionltd/go-omg/spec"
 	"io/ioutil"
 	"net/http"
@@ -26,8 +25,8 @@ func (c Client) do(req *http.Request) ([]byte, error) {
 }
 
 // GetMirrorsMessage makes an HTTP request to a host and downloads contents of mirrors.txt.
-func (c Client) GetMirrorsMessage(ctx context.Context, host string) (spec.Mirrors, error) {
-	req, err := request.Host(host).NewRequestMirrors(ctx)
+func (c Client) GetMirrorsMessage(ctx context.Context, hostURL string) (spec.Mirrors, error) {
+	req, err := NewRequestMirrors(ctx, hostURL)
 	if err != nil {
 		return nil, err
 	}
@@ -35,8 +34,8 @@ func (c Client) GetMirrorsMessage(ctx context.Context, host string) (spec.Mirror
 }
 
 // GetCanaryMessage makes an HTTP request to a host and downloads contents of canary.txt.
-func (c Client) GetCanaryMessage(ctx context.Context, host string) (spec.Canary, error) {
-	req, err := request.Host(host).NewRequestCanary(ctx)
+func (c Client) GetCanaryMessage(ctx context.Context, hostURL string) (spec.Canary, error) {
+	req, err := NewRequestCanary(ctx, hostURL)
 	if err != nil {
 		return nil, err
 	}
@@ -44,8 +43,8 @@ func (c Client) GetCanaryMessage(ctx context.Context, host string) (spec.Canary,
 }
 
 // GetRelatedMessage makes an HTTP request to a host and downloads contents of related.txt.
-func (c Client) GetRelatedMessage(ctx context.Context, host string) (spec.Mirrors, error) {
-	req, err := request.Host(host).NewRequestRelated(ctx)
+func (c Client) GetRelatedMessage(ctx context.Context, hostURL string) (spec.Mirrors, error) {
+	req, err := NewRequestRelated(ctx, hostURL)
 	if err != nil {
 		return nil, err
 	}
