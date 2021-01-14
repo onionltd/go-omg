@@ -9,10 +9,22 @@ import (
 )
 
 type Client struct {
-	cli *http.Client
+	cli       *http.Client
+	userAgent string
+}
+
+const DefaultUserAgent = "go-omg/1.0"
+
+func (c Client) setUserAgent(req *http.Request) {
+	ua := c.userAgent
+	if ua == "" {
+		ua = DefaultUserAgent
+	}
+	req.Header.Set("User-Agent", ua)
 }
 
 func (c Client) do(req *http.Request) ([]byte, error) {
+	c.setUserAgent(req)
 	res, err := c.cli.Do(req)
 	if err != nil {
 		return nil, err
@@ -49,6 +61,10 @@ func (c Client) GetRelatedMessage(ctx context.Context, hostURL string) (spec.Mir
 		return nil, err
 	}
 	return c.do(req)
+}
+
+func (c *Client) SetUserAgent(ua string) {
+	c.userAgent = ua
 }
 
 // NewClient returns an instance of Client, which wraps passed httpClient.

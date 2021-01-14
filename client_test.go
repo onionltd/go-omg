@@ -88,3 +88,27 @@ func TestClient_GetMirrorsMessage(t *testing.T) {
 		}
 	}
 }
+
+func TestClient_CustomUserAgent(t *testing.T) {
+	const customUserAgent = "cua/2.1"
+	testServer := httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+		ua := req.Header.Get("User-Agent")
+		if ua != customUserAgent {
+			t.Fatal("bad user agent")
+		}
+		mirrors, err := ioutil.ReadFile("testdata/mirrors.txt")
+		if err != nil {
+			t.Fatal(err)
+		}
+		if _, err := res.Write(mirrors); err != nil {
+			t.Fatal(err)
+		}
+	}))
+	defer testServer.Close()
+	c := goomg.NewClient(testServer.Client())
+	c.SetUserAgent(customUserAgent)
+	_, err := c.GetMirrorsMessage(context.Background(), testServer.URL)
+	if err != nil {
+		t.Fatal(err)
+	}
+}

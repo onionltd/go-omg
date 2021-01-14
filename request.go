@@ -46,10 +46,5 @@ func newRequest(ctx context.Context, url string) (*http.Request, error) {
 		return nil, err
 	}
 	req.Close = true
-	setUserAgent(req)
 	return req, nil
-}
-
-func setUserAgent(req *http.Request) {
-	req.Header.Set("User-Agent", "go-omg-client/1.0")
 }
