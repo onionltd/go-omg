@@ -1,6 +1,7 @@
 package request
 
 import (
+	"context"
 	"net/http"
 	"net/url"
 	"path"
@@ -8,47 +9,47 @@ import (
 
 type Host string
 
-func (h Host) NewRequestMirrors() (*http.Request, error) {
+func (h Host) NewRequestMirrors(ctx context.Context) (*http.Request, error) {
 	u, err := url.Parse(string(h))
 	if err != nil {
 		return nil, err
 	}
 	u.Path = path.Join(u.Path, "mirrors.txt")
-	req, err := newRequest(u)
+	req, err := newRequest(ctx, u)
 	if err != nil {
 		return nil, err
 	}
 	return req, nil
 }
 
-func (h Host) NewRequestCanary() (*http.Request, error) {
+func (h Host) NewRequestCanary(ctx context.Context) (*http.Request, error) {
 	u, err := url.Parse(string(h))
 	if err != nil {
 		return nil, err
 	}
 	u.Path = path.Join(u.Path, "canary.txt")
-	req, err := newRequest(u)
+	req, err := newRequest(ctx, u)
 	if err != nil {
 		return nil, err
 	}
 	return req, nil
 }
 
-func (h Host) NewRequestRelated() (*http.Request, error) {
+func (h Host) NewRequestRelated(ctx context.Context) (*http.Request, error) {
 	u, err := url.Parse(string(h))
 	if err != nil {
 		return nil, err
 	}
 	u.Path = path.Join(u.Path, "related.txt")
-	req, err := newRequest(u)
+	req, err := newRequest(ctx, u)
 	if err != nil {
 		return nil, err
 	}
 	return req, nil
 }
 
-func newRequest(host *url.URL) (*http.Request, error) {
-	req, err := http.NewRequest(http.MethodGet, host.String(), nil)
+func newRequest(ctx context.Context, host *url.URL) (*http.Request, error) {
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, host.String(), nil)
 	if err != nil {
 		return nil, err
 	}

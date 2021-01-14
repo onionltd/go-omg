@@ -1,7 +1,9 @@
-package goomg
+package goomg_test
 
 import (
 	"bytes"
+	"context"
+	goomg "github.com/onionltd/go-omg"
 	"golang.org/x/crypto/openpgp"
 	"io/ioutil"
 	"net/http"
@@ -29,8 +31,8 @@ func TestClient_GetCanaryMessage(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	c := NewClient(testServer.Client())
-	canary, err := c.GetCanaryMessage(testServer.URL)
+	c := goomg.NewClient(testServer.Client())
+	canary, err := c.GetCanaryMessage(context.Background(), testServer.URL)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -66,8 +68,8 @@ func TestClient_GetMirrorsMessage(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	c := NewClient(testServer.Client())
-	mirrors, err := c.GetMirrorsMessage(testServer.URL)
+	c := goomg.NewClient(testServer.Client())
+	mirrors, err := c.GetMirrorsMessage(context.Background(), testServer.URL)
 	if err != nil {
 		t.Fatal(err)
 	}
