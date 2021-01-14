@@ -1,14 +1,15 @@
-package spec
+package spec_test
 
 import (
 	"bytes"
+	"github.com/onionltd/go-omg/spec"
 	"golang.org/x/crypto/openpgp"
 	"golang.org/x/crypto/openpgp/errors"
 	"io/ioutil"
 	"testing"
 )
 
-var mirrorsMessage = Mirrors(`-----BEGIN PGP SIGNED MESSAGE-----
+var mirrorsMessage = spec.Mirrors(`-----BEGIN PGP SIGNED MESSAGE-----
 Hash: SHA256
 
 http://darkfailllnkf4vf.onion

@@ -1,7 +1,8 @@
-package spec
+package spec_test
 
 import (
 	"bytes"
+	"github.com/onionltd/go-omg/spec"
 	"golang.org/x/crypto/openpgp"
 	"golang.org/x/crypto/openpgp/errors"
 	"io/ioutil"
@@ -9,7 +10,7 @@ import (
 	"time"
 )
 
-var canaryMessage = Canary(`-----BEGIN PGP SIGNED MESSAGE-----
+var canaryMessage = spec.Canary(`-----BEGIN PGP SIGNED MESSAGE-----
 Hash: SHA256
 
 I am the admin of DarkDotFail.
@@ -51,7 +52,7 @@ func TestCanary_ValidateExpired(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if err := canaryMessage.Validate(date); err != ErrExpired {
+	if err := canaryMessage.Validate(date); err != spec.ErrExpired {
 		t.Fatal(err)
 	}
 }
@@ -71,7 +72,7 @@ func TestCanary_IsValidDateExpired(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if err := canaryMessage.Validate(date); err != ErrExpired {
+	if err := canaryMessage.Validate(date); err != spec.ErrExpired {
 		t.Fatal(err)
 	}
 }
